@@ -1,0 +1,39 @@
+body{
+    background-color: rgb(50, 50, 50);
+}
+.hover-dark:hover{
+    background-color: #30363b;
+    color: white;
+}
+.input-dark, .input-dark:focus, .input-dark:read-only{
+    background-color: #585858;
+    color: white;
+    border-color: #585858;
+}
+.require{
+    border-color: red !important;
+}
+.insetShadow{
+    box-shadow: inset 5em 1em rgba(0, 0, 0, 0.5);
+}
+.hidden, .hide{
+    display: none;
+}
+.curser-pointer{
+    cursor: pointer;
+}
+.btn-edit{
+    width: 30px;
+    height: 30px;
+}
+.curser-not-allowed{
+    cursor: not-allowed;
+}
+*{
+    color: white;
+    padding: 0;
+    margin: 0;
+}
+.line{
+    border-bottom: 1px solid white;
+}
