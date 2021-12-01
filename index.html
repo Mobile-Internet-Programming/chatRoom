@@ -15,18 +15,22 @@
         <!-- Fontawesome -->
 
         <!-- CSS -->
-        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="./css/general.css">
         <link rel="stylesheet" href="./css/message.css">
         <!-- CSS -->
 
         <!-- JS -->
+        <script src="./js/Settings.js" defer></script>
         <script src="./js/DOMUtil.js" defer></script>
         <script src="./js/ViewModel.js" defer></script>
         <!-- JS -->
         <title>Chat - Room</title>
     </head>
     <body>
-        <header class="bg-dark container pb-2 line mt-2"><h1 class="text-center mb-0">Chat - Room</h1></header>
+        <header class="bg-dark container pb-2 line mt-2 header-flex">
+            <h1 class="text-center mb-0">Chat - Room</h1>
+            <button class="btn btn-secondary settingsBtn" data-bs-toggle="modal" data-bs-target="#settingsModal" id="openSettingsModal"><i class="fas fa-cog"></i></button>
+        </header>
         <div class="container bg-dark pt-md-5 pb-md-5">
             <div class="row">  
                 <div class="col">      
@@ -45,19 +49,40 @@
                     <div class="row mb-3">
                         <label class="col-sm-2"></label>
                         <div class="col-sm-6">
-                            <button class="btn btn-primary col" id="send" style="width: 49%;">Send</button>
-                            <button class="btn btn-secondary col" id="refresh" style="width: 50%;"><i class="fas fa-sync"></i> Refresh</button>
+                            <button class="btn btn-primary col-sm-4" id="send">Send</button>
+                            <button class="btn btn-secondary col-sm-4" id="refresh"><i class="fas fa-sync"></i> Refresh</button>
                         </div>
                     </div>
                     
             </div>
             <div class="row">
                 <div class="col">
-                    <h1>Messagelog</h1>
+                    <div class="log">
+                        <h1>Messagelog</h1>
+                        <div class="status">Status<div class="state" style="color: orange;" id="state">connecting...</div></div>
+                    </div>
+                    
                     <div class="messages" id="messages">
                         
                     </div>
                 </div>
+            </div>
+        </div>
+        <div class="modal fade" id="settingsModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content bg-dark">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="staticBackdropLabel">Settings</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="settingsModalBody">
+                    
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancle</button>
+                  <button type="button" class="btn btn-primary" id="settingsModalBtnSave">Save</button>
+                </div>
+              </div>
             </div>
         </div>
     </body>

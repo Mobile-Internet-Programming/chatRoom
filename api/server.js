@@ -11,14 +11,16 @@ http.createServer((req, res) => {
     
     if ((req.url.split("?")[0]) === "/deleteMessage") {
         fs.readFile("../../_Data/chatRoom/messageLog.json", (err, data) => {
-            if(err) throw err;
-            
             res.writeHead(200, {'Content-Type': 'text/html', 'Access-Control-Allow-Origin': '*'});
             let chatObj;
             let q = url.parse(req.url, true);
-
-            chatObj = JSON.parse(data);
-
+            
+            if(err) {
+                chatObj = new ChatObject();
+            }else {
+                chatObj = JSON.parse(data);
+            }
+            
             for(let i = 0; i < chatObj.messages.length; i++){
                 if(Number(chatObj.messages[i].id) === Number(q.query.id)){
                     chatObj.messages.splice(i, 1);
@@ -47,7 +49,7 @@ http.createServer((req, res) => {
             res.write(JSON.stringify(chatObj.messages));
             res.end();
         })
-    }else {
+    }else if (req.url.split("?")[0] === "/createMessage"){
         fs.readFile("../../_Data/chatRoom/messageLog.json", (err, data) => {
             res.writeHead(200, {'Content-Type': 'text/html', 'Access-Control-Allow-Origin': '*'});
             let q = url.parse(req.url, true);

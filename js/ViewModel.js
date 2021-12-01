@@ -7,11 +7,13 @@ class ViewModel {
         user: "",
         msg: ""
     }
+    intervalID;
 
     constructor() {
         this.messageLog = [];
         this.domUtils = new DOMUtil();      
         this.getMessageLog();
+        this.refresh();
     }
 
     render () {
@@ -29,6 +31,11 @@ class ViewModel {
         document.querySelector(btnSelector).onclick = () => {
             this.getMessageLog();        
         }; 
+    };
+    bindOpenSettingsModal (btnSelector) {
+        document.querySelector(btnSelector).onclick = () => {
+            this.settingModal();
+        }
     }
     checkValidInput (obj) {
         let valid = true;
@@ -52,7 +59,7 @@ class ViewModel {
         if(!this.checkValidInput()) return;
         this.sendRequest(
             "GET", 
-            "http://localhost:8080",
+            "http://localhost:8080" + "/createMessage",
             this.sendObj,
             {},
             (messages) => {this.messageLog = messages; this.render()}
@@ -64,7 +71,16 @@ class ViewModel {
             "http://localhost:8080" + "/getMessageLog",
             {},
             {},
-            (messages) => {this.messageLog = messages; this.render()}
+            (messages) => {
+                let lastLog = this.messageLog.length;
+                this.messageLog = messages;
+
+                if(lastLog != this.messageLog.length){
+                    this.render();
+                    this.setServerState("connected", {color: "green"})
+                }
+            },
+            (e) => {this.setServerState("offline", {color: "red"})}
         );
     }
     createMessage (id, user, msg) {
@@ -90,10 +106,13 @@ class ViewModel {
             "http://localhost:8080" + "/deleteMessage",
             {id: id},
             {},
-            (messages) => {this.messageLog = messages; this.render()}
+            (messages) => {
+                this.messageLog = messages; 
+                this.render();
+            }
         );
     }
-    sendRequest (method, urlP, searchParams, body, callback) {
+    sendRequest (method, urlP, searchParams, body, callback, errorFunc) {
         
         let lookUpTable = ["GET", "PUT", "POST", "DELETE"];
 
@@ -124,6 +143,12 @@ class ViewModel {
                 alert(`Error ${request.status}: ${request.statusText}`);
             }
         }
+        request.onerror = function (e) {
+            console.log(typeof errorFunc);
+            if(typeof errorFunc === "function"){
+                errorFunc();
+            }
+        };
         if(body != String)
             body = JSON.stringify(body);
 
@@ -132,6 +157,54 @@ class ViewModel {
         }else{
             request.send(body);
         }
+    };
+    refresh () {
+
+        if(!Settings.refresh){
+            clearInterval(this.intervalID);
+            return;
+        }
+        this.intervalID = setInterval( () => {
+                this.getMessageLog();
+        }, Number(Settings.refreshTime));
+    };
+    setServerState (state, style) {
+        let stateObj = document.getElementById("state");
+        stateObj.innerHTML = state;
+        for(let key in style) {
+            stateObj.style[key] = style[key];
+        }
+    }
+    settingModal () {
+        let modal = document.getElementById("settingsModalBody");
+        modal.innerHTML = "";
+
+        modal.innerHTML = `
+        <div class="mb-3 row">
+            <label for="modalDate" class="col-sm-4 col-form-label">RefreshRate:</label>
+            <div class="col-sm-5">
+                <input type="number" id="modalRefreshRate" class="form-control input-dark" value=${Settings.refreshTime} min=1000>
+            </div>
+        </div>
+        <div class="mb-3 row">
+            <label for="modalDate" class="col-sm-4 col-form-check-label">Refresh</label>
+            <div class="col-sm-7">
+                <input type="checkbox" id="modalRefresh" class="form-check-input">
+            </div>
+        </div>
+        `;
+
+        modal.querySelector("#modalRefresh").checked = Settings.refresh;
+
+        document.querySelector("#settingsModalBtnSave").onclick = () => {
+            Settings.refreshTime = Number(modal.querySelector("#modalRefreshRate").value);
+            if(Settings.refreshTime < 1000) {
+                Settings.refreshTime = 1000;
+            }
+            Settings.refresh = modal.querySelector("#modalRefresh").checked;
+            clearInterval(this.intervalID);
+            this.refresh();
+        }
     }
 }
 
@@ -139,9 +212,6 @@ let viewModel = new ViewModel();
 
 viewModel.bindSend("#send");
 viewModel.bindRefresh("#refresh");
+viewModel.bindOpenSettingsModal("#openSettingsModal");
 
 viewModel.render();
-
-setInterval(() => {
-    viewModel.getMessageLog();
-}, 2000)

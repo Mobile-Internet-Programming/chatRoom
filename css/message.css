@@ -1,6 +1,7 @@
 .message {
     display: inline-block;
     width: 20rem;
+    
     background-color: rgb(60, 60, 60);
     margin-bottom: 1rem;
     border-radius: 18px;
@@ -36,12 +37,20 @@
     justify-content: center;
     align-items: center;
     
-
     transform: translateY(-45%);
     
+}
+.message-delete:hover {
+    background-color: rgb(170, 2, 2);
+    transition: background-color .3s ease-in-out;
 }
 .messages {
     display: flex;
     width: 20rem;
     flex-wrap: wrap;
+}
+@media only screen and (max-width: 300px){
+    .message{
+        width: 15rem;
+    }
 }

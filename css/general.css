@@ -37,3 +37,36 @@ body{
 .line{
     border-bottom: 1px solid white;
 }
+.header-flex {
+    display: flex;
+    position: relative;
+    justify-content: center;
+}
+.settingsBtn {
+    display: flex;
+    width: 30px;
+    height: 30px;
+    position: absolute;
+    top: 50%;
+    right: 10px;
+
+    justify-content: center;
+    align-items: center;
+
+    transform: translateY(-45%);
+}
+.status {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    margin-left: 4rem;
+}
+.state {
+    position: absolute;
+    top: 55%;
+}
+.log {
+    display: flex;
+    position: relative;
+}
