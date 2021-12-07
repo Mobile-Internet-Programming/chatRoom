@@ -144,7 +144,6 @@ class ViewModel {
             }
         }
         request.onerror = function (e) {
-            console.log(typeof errorFunc);
             if(typeof errorFunc === "function"){
                 errorFunc();
             }
