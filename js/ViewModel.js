@@ -77,8 +77,8 @@ class ViewModel {
 
                 if(lastLog != this.messageLog.length){
                     this.render();
-                    this.setServerState("connected", {color: "green"})
                 }
+                this.setServerState("connected", {color: "green"})
             },
             (e) => {this.setServerState("offline", {color: "red"})}
         );
@@ -169,9 +169,11 @@ class ViewModel {
     };
     setServerState (state, style) {
         let stateObj = document.getElementById("state");
-        stateObj.innerHTML = state;
-        for(let key in style) {
-            stateObj.style[key] = style[key];
+        if(stateObj.innerHTML != state) {
+            stateObj.innerHTML = state;
+            for(let key in style) {
+                stateObj.style[key] = style[key];
+            }
         }
     }
     settingModal () {
